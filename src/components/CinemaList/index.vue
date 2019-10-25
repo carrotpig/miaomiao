@@ -1,90 +1,20 @@
 <template>
     <div class="cinema_body">
         <ul>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
-        <li>
-            <div>
-            <span>大地影院(澳东世纪店)</span>
-            <span class="q"><span class="price">22.9</span> 元起</span>
-            </div>
-            <div class="address">
-            <span>金州区大连经济技术开发区澳东世纪3层</span>
-            <span>1763.5km</span>
-            </div>
-            <div class="card">
-            <div>小吃</div>
-            <div>折扣卡</div>
-            </div>
-        </li>
+            <li v-for="(item, index) in cinemaList" :key="index">
+                <div>
+                <span>{{item.nm}}</span>
+                <span class="q"><span class="price">{{item.sellPrice}}</span> 元起</span>
+                </div>
+                <div class="address">
+                <span>{{item.addr}}</span>
+                <span>{{item.distance}}</span>
+                </div>
+                <div class="card">
+                <div v-if="item.tag.snack == 1">小吃</div>
+                <div v-if="item.tag.vipTag == '折扣卡'">折扣卡</div>
+                </div>
+            </li>
         </ul>
     </div>
 </template>
@@ -93,9 +23,48 @@
 export default {
     name:'cinemaList',
     data() {
-    return {};
+        return {
+            cinemaList:[]
+        };
     },
-    components: {}
+    mounted() {
+        this.axios.get('/api/cinemaList?cityId=10').then((res)=>{
+            var msg = res.data.msg
+            if(msg === 'ok'){
+                this.cinemaList = res.data.data.cinemas
+            }
+        })
+    },
+    components: {},
+    filters:{
+        //定义两个过滤器
+        //将tag中的数字转化为对应的选项
+        formatCard(key){
+            var card = [
+                {key:'allowRefund',value:'改签'},
+                {key:'snack',value:'小吃'},
+                {key:'vipTag',value:'折扣卡'}
+            ]
+            for (let index = 0; index < card.length; index++) {
+                if(key ===  card[i].key){
+                    return card[i].value
+                }
+            }
+        },
+        //定义一个样式过滤器
+        classCard(key){
+            var card = [
+                {key:'allowRefund',value:'or'},
+                {key:'snack',value:'bl'},
+                {key:'vipTag',value:'or'}
+            ]
+            for (let index = 0; index < card.length; index++) {
+                if(key ===  card[i].key){
+                    return card[i].value
+                }
+            }
+        }
+    }
 };
 </script>
 
